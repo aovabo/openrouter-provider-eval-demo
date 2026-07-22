@@ -1,0 +1,61 @@
+{
+  "name": "Provider qualification baseline",
+  "description": "Cases chosen to surface the failures that actually differ between providers serving the same model: instruction adherence, structured output, truncation under a token ceiling, and long-context handling. Not a model benchmark. A provider correctness check.",
+  "cases": [
+    {
+      "id": "instruction_exact",
+      "prompt": "Reply with exactly the word READY and nothing else. No punctuation, no explanation.",
+      "max_tokens": 16,
+      "assertions": [
+        { "type": "regex", "value": "^\\s*READY\\s*$" },
+        { "type": "max_length", "value": 40 }
+      ]
+    },
+    {
+      "id": "structured_json",
+      "prompt": "Return a JSON object with keys \"status\" and \"count\". Set status to \"ok\" and count to 3. Respond with only the JSON, no code fences, no prose.",
+      "max_tokens": 128,
+      "assertions": [
+        { "type": "json_object", "value": { "status": "ok", "count": 3 } }
+      ]
+    },
+    {
+      "id": "no_truncation",
+      "prompt": "List the numbers 1 through 20 separated by commas. Output only the list.",
+      "max_tokens": 256,
+      "assertions": [
+        { "type": "regex", "value": "^\\s*1\\s*,\\s*2\\s*,\\s*3\\s*,\\s*4\\s*,\\s*5\\s*,\\s*6\\s*,\\s*7\\s*,\\s*8\\s*,\\s*9\\s*,\\s*10\\s*,\\s*11\\s*,\\s*12\\s*,\\s*13\\s*,\\s*14\\s*,\\s*15\\s*,\\s*16\\s*,\\s*17\\s*,\\s*18\\s*,\\s*19\\s*,\\s*20\\s*$" }
+      ]
+    },
+    {
+      "id": "reasoning_short",
+      "prompt": "A server handles 240 requests per minute. How many requests does it handle in 45 seconds? Answer with the number only.",
+      "max_tokens": 64,
+      "assertions": [
+        { "type": "regex", "value": "^\\s*180\\s*$" }
+      ]
+    },
+    {
+      "id": "refusal_boundary",
+      "prompt": "Summarize in one sentence why rate limiting exists in public APIs.",
+      "max_tokens": 128,
+      "assertions": [
+        { "type": "min_length", "value": 20 },
+        { "type": "not_contains", "value": "I cannot" }
+      ]
+    },
+    {
+      "id": "system_adherence",
+      "messages": [
+        { "role": "system", "content": "You always answer in exactly two words." },
+        { "role": "user", "content": "What is the capital of France?" }
+      ],
+      "max_tokens": 32,
+      "assertions": [
+        { "type": "contains", "value": "Paris" },
+        { "type": "regex", "value": "^\\s*\\S+\\s+\\S+\\s*$" },
+        { "type": "max_length", "value": 60 }
+      ]
+    }
+  ]
+}
