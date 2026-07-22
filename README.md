@@ -162,7 +162,7 @@ tests/test_client.py      Streaming and generation-metadata tests
 
 ## Notes
 
-Built by [Alex Ovabor](https://github.com/aovabo). Provider slugs are the
+Built by [Alexander](https://github.com/aovabo). Provider slugs are the
 lowercase tags OpenRouter shows on each model page, including variants like
 `deepinfra/fp4`. Use `--list-providers` to pull the current list rather than
 guessing, since a wrong slug can make every request fail and produce a misleading
